@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+if (!ini_get('date.timezone')) {
+    ini_set('date.timezone', 'UTC');
+}
+
+$projectDir = dirname(__DIR__);
+$phpunitBinary = $projectDir . '/vendor/bin/phpunit';
+$simplePhpunit = $projectDir . '/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php';
+
+// Si PHPUnit (binaire) existe, on l'exécute
+if (is_file($phpunitBinary)) {
+    passthru($phpunitBinary);
+    exit(0);
+}
+
+// Sinon on vérifie s'il y a le bridge Symfony
+if (is_file($simplePhpunit)) {
+    require $simplePhpunit;
+    exit(0);
+}
+
+// Sinon on affiche un message d'erreur clair
+echo "❌ PHPUnit n'est pas installé.\n";
+echo "➡️  Installe-le avec : composer require --dev phpunit/phpunit\n";
+echo "➡️  Ou avec le bridge Symfony : composer require --dev symfony/phpunit-bridge\n";
+exit(1);
